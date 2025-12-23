@@ -1,0 +1,69 @@
+ use myDB
+switched to db myDB
+myDB> db.createCollection("Student");
+{ ok: 1 }
+myDB> var mystudent = [{Rollno: 10, Age: 20, ContactNo: "9876543210", EmailId:
+... "abc10@gmail.com", Name: "ABC" },{ Rollno: 11, Age: 21, ContactNo: "9123456780", EmailId:
+... "abc11@gmail.com", Name: "ABC" },{ Rollno: 12, Age: 22, ContactNo: "9988776655", EmailId:
+... }
+Uncaught:
+SyntaxError: Unexpected token (4:0)
+
+  2 | "abc10@gmail.com", Name: "ABC" },{ Rollno: 11, Age: 21, ContactNo: "9123456780", EmailId:
+  3 | "abc11@gmail.com", Name: "ABC" },{ Rollno: 12, Age: 22, ContactNo: "9988776655", EmailId:
+> 4 | }
+    | ^
+  5 |
+
+myDB> db.Student.insertMany([
+...
+... { Rollno: 10, Age: 20, ContactNo: "9876543210", EmailId:
+... "abc10@gmail.com", Name: "ABC" },
+...
+... { Rollno: 11, Age: 21, ContactNo: "9123456780", EmailId:
+... "abc11@gmail.com", Name: "ABC" },
+...
+... { Rollno: 12, Age: 22, ContactNo: "9988776655", EmailId:
+... "abc12@gmail.com", Name: "XYZ" }
+...
+... ])
+...
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6927c8fc9dc1c630ef63b112'),
+    '1': ObjectId('6927c8fc9dc1c630ef63b113'),
+    '2': ObjectId('6927c8fc9dc1c630ef63b114')
+  }
+}
+myDB> db.Student.updateOne(
+...
+... { Rollno: 10 },
+...
+... { $set: { EmailId: "newemail10@gmail.com" } }
+...
+... )
+...
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+myDB> db.Student.updateOne(
+...
+... { Rollno: 11, Name: "ABC" },
+...
+... { $set: { Name: "FEM" } }
+...
+... )
+...
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+myDB>
