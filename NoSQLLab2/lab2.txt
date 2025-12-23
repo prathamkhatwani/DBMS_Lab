@@ -1,0 +1,56 @@
+myDB> db.Customers.drop();
+true
+myDB> use myDatabase;
+switched to db myDatabase
+myDatabase> db.createCollection("Customers");
+{ ok: 1 }
+myDatabase> db.Customers.insertMany([
+...   { Cust_id: 1, Acc_Bal: 1500, Acc_Type: "Z" },
+...   { Cust_id: 2, Acc_Bal: 800,  Acc_Type: "A" },
+...   { Cust_id: 3, Acc_Bal: 2000, Acc_Type: "Z" },
+...   { Cust_id: 4, Acc_Bal: 500,  Acc_Type: "Z" },
+...   { Cust_id: 5, Acc_Bal: 3000, Acc_Type: "B" }
+... ]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('693a3c4fd6167d22be63b117'),
+    '1': ObjectId('693a3c4fd6167d22be63b118'),
+    '2': ObjectId('693a3c4fd6167d22be63b119'),
+    '3': ObjectId('693a3c4fd6167d22be63b11a'),
+    '4': ObjectId('693a3c4fd6167d22be63b11b')
+  }
+}
+myDatabase> db.Customers.find(
+...   {
+...     Acc_Type: "Z",
+...     Acc_Bal: { $gt: 1200 }
+...   }
+... );
+[
+  {
+    _id: ObjectId('693a3c4fd6167d22be63b117'),
+    Cust_id: 1,
+    Acc_Bal: 1500,
+    Acc_Type: 'Z'
+  },
+  {
+    _id: ObjectId('693a3c4fd6167d22be63b119'),
+    Cust_id: 3,
+    Acc_Bal: 2000,
+    Acc_Type: 'Z'
+  }
+]
+myDatabase> db.Customers.aggregate([
+...   { $group: {
+...       _id: "$Cust_id",
+...       minBalance: { $min: "$Acc_Bal" },
+...       maxBalance: { $max: "$Acc_Bal" }
+...   }}
+... ]);
+[
+  { _id: 1, minBalance: 1500, maxBalance: 1500 },
+  { _id: 2, minBalance: 800, maxBalance: 800 },
+  { _id: 3, minBalance: 2000, maxBalance: 2000 },
+  { _id: 4, minBalance: 500, maxBalance: 500 },
+  { _id: 5, minBalance: 3000, maxBalance: 3000 }
